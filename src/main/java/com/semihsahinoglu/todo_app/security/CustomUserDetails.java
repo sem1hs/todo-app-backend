@@ -1,5 +1,6 @@
-package com.semihsahinoglu.todo_app.entity;
+package com.semihsahinoglu.todo_app.security;
 
+import com.semihsahinoglu.todo_app.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

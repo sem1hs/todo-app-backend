@@ -1,13 +1,13 @@
 package com.semihsahinoglu.todo_app.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.semihsahinoglu.todo_app.dto.TodoRequest;
 import com.semihsahinoglu.todo_app.dto.TodoResponse;
-import com.semihsahinoglu.todo_app.entity.CustomUserDetails;
+import com.semihsahinoglu.todo_app.security.CustomUserDetails;
 import com.semihsahinoglu.todo_app.entity.Todo;
 import com.semihsahinoglu.todo_app.entity.User;
 import com.semihsahinoglu.todo_app.mapper.TodoMapper;
 import com.semihsahinoglu.todo_app.repository.TodoRepository;
-import com.semihsahinoglu.todo_app.service.TodoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,14 +21,16 @@ class TodoServiceTest {
     private TodoRepository todoRepository;
     private TodoMapper todoMapper;
     private CustomUserDetails userDetails;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setup() {
         todoRepository = Mockito.mock(TodoRepository.class);
         todoMapper = Mockito.mock(TodoMapper.class);
         userDetails = Mockito.mock(CustomUserDetails.class);
+        objectMapper = Mockito.mock(ObjectMapper.class);
 
-        todoService = new TodoService(todoMapper, todoRepository);
+        todoService = new TodoService(todoMapper, todoRepository, objectMapper);
     }
 
     @Test

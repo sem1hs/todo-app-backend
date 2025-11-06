@@ -1,6 +1,6 @@
 package com.semihsahinoglu.todo_app.service;
 
-import com.semihsahinoglu.todo_app.entity.CustomUserDetails;
+import com.semihsahinoglu.todo_app.security.CustomUserDetails;
 import com.semihsahinoglu.todo_app.entity.User;
 import com.semihsahinoglu.todo_app.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;

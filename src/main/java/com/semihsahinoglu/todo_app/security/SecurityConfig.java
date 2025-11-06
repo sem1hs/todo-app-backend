@@ -1,6 +1,5 @@
-package com.semihsahinoglu.todo_app.config;
+package com.semihsahinoglu.todo_app.security;
 
-import com.semihsahinoglu.todo_app.security.JwtAuthFilter;
 import com.semihsahinoglu.todo_app.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,11 +30,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+                                                   JwtAuthenticationEntryPoint entryPoint,
+                                                   CustomAccessDeniedHandler deniedHandler) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/login", "/api/v1/auth/signup","/api/v1/auth/refresh-token").permitAll())
-                .authorizeHttpRequests(auth->auth.requestMatchers("/api/v1/todo/**").authenticated())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(entryPoint))
+                .exceptionHandling(exception -> exception.accessDeniedHandler(deniedHandler))
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/login", "/api/v1/auth/signup", "/api/v1/auth/refresh-token").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/todo/**").authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
