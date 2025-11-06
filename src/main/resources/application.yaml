@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: todo-app
+
+  datasource:
+    url: jdbc:postgresql://localhost:5436/todoAppDB
+    username: postgres
+    password: 123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# PowerShellde bunu yaz
+#[Convert]::ToBase64String((1..32 | ForEach-Object {Get-Random -Maximum 256}))
+jwt:
+  key: 9W5XgXodMr4OQ5QGm4ReV9FbtVqnM3MCHazU14ols/k=
