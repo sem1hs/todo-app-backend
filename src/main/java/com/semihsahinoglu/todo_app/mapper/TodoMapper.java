@@ -17,7 +17,8 @@ public class TodoMapper {
                 .title(todo.getTitle())
                 .description(todo.getDescription())
                 .completed(todo.getCompleted())
-                .username(todo.getUser().getUsername())
+                .createdBy(todo.getCreatedBy())
+                .createdDate(todo.getCreatedDate())
                 .build();
 
         return todoResponse;

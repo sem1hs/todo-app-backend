@@ -4,6 +4,7 @@ import com.semihsahinoglu.todo_app.dto.TodoRequest;
 import com.semihsahinoglu.todo_app.dto.TodoResponse;
 import com.semihsahinoglu.todo_app.security.CustomUserDetails;
 import com.semihsahinoglu.todo_app.service.TodoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,5 +43,11 @@ public class TodoController {
     public ResponseEntity<TodoResponse> updateTodo(@PathVariable(name = "id") Long todoId, @RequestBody Map<String, Object> updates, CustomUserDetails userDetails) {
         TodoResponse todoResponse = todoService.updateTodo(todoId, updates, userDetails);
         return ResponseEntity.ok().body(todoResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTodo(@PathVariable(name = "id") Long todoId, CustomUserDetails userDetails) {
+        todoService.deleteTodo(todoId, userDetails);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(String.format("Silme işlemi başarılı. Silinen id : %s", todoId));
     }
 }

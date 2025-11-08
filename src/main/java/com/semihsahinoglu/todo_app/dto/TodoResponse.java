@@ -1,18 +1,22 @@
 package com.semihsahinoglu.todo_app.dto;
 
+import java.time.LocalDateTime;
+
 public record TodoResponse(
         Long id,
         String title,
         String description,
         Boolean completed,
-        String username
+        String createdBy,
+        LocalDateTime createdDate
 ) {
     public static class Builder {
         private Long id;
         private String title;
         private String description;
         private Boolean completed;
-        private String username;
+        private String createdBy;
+        private LocalDateTime createdDate;
 
         public Builder id(Long id) {
             this.id = id;
@@ -34,13 +38,18 @@ public record TodoResponse(
             return this;
         }
 
-        public Builder username(String username) {
-            this.username = username;
+        public Builder createdBy(String createdBy) {
+            this.createdBy = createdBy;
+            return this;
+        }
+
+        public Builder createdDate(LocalDateTime createdDate) {
+            this.createdDate = createdDate;
             return this;
         }
 
         public TodoResponse build() {
-            return new TodoResponse(id, title, description, completed, username);
+            return new TodoResponse(id, title, description, completed, createdBy, createdDate);
         }
 
     }

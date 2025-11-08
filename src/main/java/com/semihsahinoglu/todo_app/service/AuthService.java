@@ -8,6 +8,7 @@ import com.semihsahinoglu.todo_app.exception.InvalidRefreshTokenException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -35,16 +36,11 @@ public class AuthService {
                 accessToken = jwtService.generateAccessToken(loginRequest.username());
                 refreshToken = jwtService.generateRefreshToken(loginRequest.username());
             }
-        } catch (Exception e) {
-            throw new UsernameNotFoundException(String.format("Kullanıcı Bulunamadı -> %s ", loginRequest.username()));
+        } catch (AuthenticationException e) {
+            throw new UsernameNotFoundException("Kullanıcı adı veya şifre hatalı!");
         }
 
-        JwtTokenResponse response = JwtTokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-
-        return response;
+        return buildTokenResponse(accessToken, refreshToken);
     }
 
     public JwtTokenResponse signUpAndGenerateToken(CreateUserRequest createUserRequest) {
@@ -53,12 +49,7 @@ public class AuthService {
         String accessToken = jwtService.generateAccessToken(user.getUsername());
         String refreshToken = jwtService.generateRefreshToken(user.getUsername());
 
-        JwtTokenResponse response = JwtTokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-
-        return response;
+        return buildTokenResponse(accessToken, refreshToken);
     }
 
     public JwtTokenResponse refreshAccessToken(String refreshToken) {
@@ -70,11 +61,13 @@ public class AuthService {
         String username = jwtService.extractUsername(refreshToken);
         String newAccessToken = jwtService.generateAccessToken(username);
 
-        JwtTokenResponse response = JwtTokenResponse.builder()
-                .accessToken(newAccessToken)
+        return buildTokenResponse(newAccessToken, refreshToken);
+    }
+
+    private JwtTokenResponse buildTokenResponse(String accessToken, String refreshToken) {
+        return JwtTokenResponse.builder()
+                .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-
-        return response;
     }
 }

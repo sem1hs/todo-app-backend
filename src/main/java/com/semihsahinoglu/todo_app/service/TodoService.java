@@ -1,6 +1,5 @@
 package com.semihsahinoglu.todo_app.service;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.semihsahinoglu.todo_app.dto.TodoRequest;
 import com.semihsahinoglu.todo_app.dto.TodoResponse;
@@ -11,11 +10,13 @@ import com.semihsahinoglu.todo_app.entity.User;
 import com.semihsahinoglu.todo_app.mapper.TodoMapper;
 import com.semihsahinoglu.todo_app.repository.TodoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 public class TodoService {
 
     private final TodoMapper todoMapper;
@@ -58,6 +59,13 @@ public class TodoService {
         }
         Todo updatedTodo = todoRepository.save(todo);
         return todoMapper.toDto(updatedTodo);
+    }
+
+    public void deleteTodo(Long todoId, CustomUserDetails userDetails) {
+        Long userId = userDetails.getUser().getId();
+        Todo todo = todoRepository.findTodosByUser_IdAndId(userId, todoId).orElseThrow(() -> new TodoNotFoundException("Todo bulunamadı !"));
+
+        todoRepository.delete(todo);
     }
 
 }
