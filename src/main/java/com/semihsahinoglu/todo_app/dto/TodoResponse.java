@@ -9,7 +9,7 @@ public record TodoResponse(
         Boolean completed,
         String createdBy,
         LocalDateTime createdDate
-) {
+) implements ApiResponse{
     public static class Builder {
         private Long id;
         private String title;

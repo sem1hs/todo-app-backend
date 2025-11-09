@@ -1,5 +1,6 @@
 package com.semihsahinoglu.todo_app.controller;
 
+import com.semihsahinoglu.todo_app.dto.ApiResponse;
 import com.semihsahinoglu.todo_app.dto.TodoRequest;
 import com.semihsahinoglu.todo_app.dto.TodoResponse;
 import com.semihsahinoglu.todo_app.security.CustomUserDetails;
@@ -22,25 +23,25 @@ public class TodoController {
     }
 
     @PostMapping
-    public ResponseEntity<TodoResponse> createTodo(@RequestBody TodoRequest todoRequest, CustomUserDetails userDetails) {
+    public ResponseEntity<ApiResponse> createTodo(@RequestBody TodoRequest todoRequest, CustomUserDetails userDetails) {
         TodoResponse todoResponse = todoService.createTodo(todoRequest, userDetails);
         return ResponseEntity.ok().body(todoResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<TodoResponse>> getAllTodos(CustomUserDetails userDetails) {
+    public ResponseEntity<List<? extends ApiResponse>> getAllTodos(CustomUserDetails userDetails) {
         List<TodoResponse> todoResponses = todoService.getAllTodos(userDetails);
         return ResponseEntity.ok().body(todoResponses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TodoResponse> getTodoById(@PathVariable(name = "id") Long todoId, CustomUserDetails userDetails) {
+    public ResponseEntity<ApiResponse> getTodoById(@PathVariable(name = "id") Long todoId, CustomUserDetails userDetails) {
         TodoResponse todoResponse = todoService.getTodoById(todoId, userDetails);
         return ResponseEntity.ok().body(todoResponse);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TodoResponse> updateTodo(@PathVariable(name = "id") Long todoId, @RequestBody Map<String, Object> updates, CustomUserDetails userDetails) {
+    public ResponseEntity<ApiResponse> updateTodo(@PathVariable(name = "id") Long todoId, @RequestBody Map<String, Object> updates, CustomUserDetails userDetails) {
         TodoResponse todoResponse = todoService.updateTodo(todoId, updates, userDetails);
         return ResponseEntity.ok().body(todoResponse);
     }

@@ -3,7 +3,7 @@ package com.semihsahinoglu.todo_app.dto;
 public record JwtTokenResponse(
         String accessToken,
         String refreshToken
-) {
+) implements ApiResponse {
 
     public static Builder builder() {
         return new Builder();
