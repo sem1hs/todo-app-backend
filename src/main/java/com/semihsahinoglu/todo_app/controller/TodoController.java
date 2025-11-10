@@ -3,6 +3,7 @@ package com.semihsahinoglu.todo_app.controller;
 import com.semihsahinoglu.todo_app.dto.ApiResponse;
 import com.semihsahinoglu.todo_app.dto.TodoRequest;
 import com.semihsahinoglu.todo_app.dto.TodoResponse;
+import com.semihsahinoglu.todo_app.dto.TodoUpdateRequest;
 import com.semihsahinoglu.todo_app.security.CustomUserDetails;
 import com.semihsahinoglu.todo_app.service.TodoService;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/todo")
@@ -41,7 +41,7 @@ public class TodoController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateTodo(@PathVariable(name = "id") Long todoId, @RequestBody Map<String, Object> updates, CustomUserDetails userDetails) {
+    public ResponseEntity<ApiResponse> updateTodo(@PathVariable(name = "id") Long todoId, @RequestBody TodoUpdateRequest updates, CustomUserDetails userDetails) {
         TodoResponse todoResponse = todoService.updateTodo(todoId, updates, userDetails);
         return ResponseEntity.ok().body(todoResponse);
     }

@@ -14,12 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT DISTINCT u FROM User u JOIN FETCH u.authorities WHERE u.username = :username")
     Optional<User> findByUsernameWithAuthorities(@Param("username") String username);
 
-    @Query("""
-        SELECT DISTINCT u FROM User u
-        LEFT JOIN FETCH u.todos
-        LEFT JOIN FETCH u.authorities
-        WHERE u = :user
-    """)
+    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.todos LEFT JOIN FETCH u.authorities WHERE u = :user")
     Optional<User> findUserWithTodosAndAuthorities(@Param("user") User user);
 
 }
