@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(entryPoint))
                 .exceptionHandling(exception -> exception.accessDeniedHandler(deniedHandler))
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/login", "/api/v1/auth/signup", "/api/v1/auth/refresh-token").permitAll())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/todo/**").authenticated())
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

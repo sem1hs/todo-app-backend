@@ -3,6 +3,7 @@ package com.semihsahinoglu.todo_app.service;
 import com.semihsahinoglu.todo_app.security.CustomUserDetails;
 import com.semihsahinoglu.todo_app.entity.User;
 import com.semihsahinoglu.todo_app.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsernameWithAuthorities(username).orElse(null);
+        User user = userRepository.findByUsernameWithAuthorities(username).orElseThrow(EntityNotFoundException::new);
         return new CustomUserDetails(user);
     }
 }
