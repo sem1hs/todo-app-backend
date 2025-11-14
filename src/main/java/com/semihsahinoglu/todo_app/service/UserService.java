@@ -1,10 +1,12 @@
 package com.semihsahinoglu.todo_app.service;
 
 import com.semihsahinoglu.todo_app.dto.CreateUserRequest;
+import com.semihsahinoglu.todo_app.dto.UserResponse;
 import com.semihsahinoglu.todo_app.entity.Role;
 import com.semihsahinoglu.todo_app.entity.User;
 import com.semihsahinoglu.todo_app.repository.RoleRepository;
 import com.semihsahinoglu.todo_app.repository.UserRepository;
+import com.semihsahinoglu.todo_app.security.CustomUserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +42,10 @@ public class UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    public UserResponse getCurrentUser(CustomUserDetails userDetails) {
+        String username = userDetails.getUser().getUsername();
+        return new UserResponse(username);
     }
 }
