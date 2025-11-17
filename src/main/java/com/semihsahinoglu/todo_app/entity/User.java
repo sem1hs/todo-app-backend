@@ -9,6 +9,20 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "User.withAll",
+                attributeNodes = {@NamedAttributeNode("authorities"), @NamedAttributeNode("todos")}
+        ),
+        @NamedEntityGraph(
+                name = "User.withAuthorities",
+                attributeNodes = @NamedAttributeNode("authorities")
+        ),
+        @NamedEntityGraph(
+                name = "User.withTodos",
+                attributeNodes = @NamedAttributeNode("todos")
+        )
+})
 @Table(name = "users")
 public class User extends Auditable {
 

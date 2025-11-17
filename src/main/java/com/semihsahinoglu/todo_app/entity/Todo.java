@@ -1,8 +1,10 @@
 package com.semihsahinoglu.todo_app.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
+@DynamicUpdate
 @Table(name = "todos")
 public class Todo extends Auditable {
 
