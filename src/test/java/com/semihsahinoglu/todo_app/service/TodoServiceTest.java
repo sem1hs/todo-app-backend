@@ -1,6 +1,6 @@
 package com.semihsahinoglu.todo_app.service;
 
-import com.semihsahinoglu.todo_app.dto.TodoRequest;
+
 import com.semihsahinoglu.todo_app.dto.TodoResponse;
 import com.semihsahinoglu.todo_app.entity.Todo;
 import com.semihsahinoglu.todo_app.entity.User;
@@ -9,83 +9,56 @@ import com.semihsahinoglu.todo_app.repository.TodoRepository;
 import com.semihsahinoglu.todo_app.security.CustomUserDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 public class TodoServiceTest {
-    @Mock
-    private TodoRepository todoRepository;
 
-    @Mock
-    private TodoMapper todoMapper;
-
-    @InjectMocks
     private TodoService todoService;
 
-    private CustomUserDetails userDetails;
-    private User user;
+    private TodoMapper todoMapper;
+    private TodoRepository todoRepository;
 
+    // 1 Setup tamamla
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        user = new User();
-        user.setId(1L);
-        user.setUsername("semih");
-        userDetails = new CustomUserDetails(user);
+    void setup() {
+        todoMapper = Mockito.mock(TodoMapper.class);
+        todoRepository = Mockito.mock(TodoRepository.class);
+
+        todoService = new TodoService(todoMapper, todoRepository);
     }
 
     @Test
-    void createTodo_shouldSaveAndReturnDto() {
-        // given
-        TodoRequest request = new TodoRequest("Test Todo", "Test description", false);
+    void shouldReturnMappedList_whenUserHasMultipleTodos() {
+        Long userId = 1L;
 
-        Todo todoEntity = new Todo();
-        todoEntity.setTitle("Test Todo");
-        todoEntity.setDescription("Test description");
-        todoEntity.setCompleted(false);
-        todoEntity.setUser(user);
+        CustomUserDetails userDetails = Mockito.mock(CustomUserDetails.class);
+        User user = Mockito.mock(User.class);
+        Mockito.when(userDetails.getUser()).thenReturn(user);
+        Mockito.when(user.getId()).thenReturn(userId);
 
-        Todo savedTodo = new Todo();
-        savedTodo.setId(1L);
-        savedTodo.setTitle("Test Todo");
-        savedTodo.setDescription("Test description");
-        savedTodo.setCompleted(false);
-        savedTodo.setUser(user);
-        savedTodo.setCreatedDate(LocalDateTime.now());
+        Todo todo1 = new Todo();
+        Todo todo2 = new Todo();
+        List<Todo> todos = List.of(todo1, todo2);
+        Mockito.when(todoRepository.findTodosByUser_Id(userId)).thenReturn(todos);
 
-        TodoResponse expectedResponse = TodoResponse.builder()
-                .id(1L)
-                .title("Test Todo")
-                .description("Test description")
-                .completed(false)
-                .createdBy("semih")
-                .createdDate(savedTodo.getCreatedDate())
-                .build();
+        TodoResponse dto1 = Mockito.mock(TodoResponse.class);
+        TodoResponse dto2 = Mockito.mock(TodoResponse.class);
+        Mockito.when(todoMapper.toDto(todo1)).thenReturn(dto1);
+        Mockito.when(todoMapper.toDto(todo2)).thenReturn(dto2);
 
-        when(todoMapper.toEntity(request, user)).thenReturn(todoEntity);
-        when(todoRepository.save(todoEntity)).thenReturn(savedTodo);
-        when(todoMapper.toDto(savedTodo)).thenReturn(expectedResponse);
-
-        // when
-        TodoResponse result = todoService.createTodo(request, userDetails);
+        List<TodoResponse> result = todoService.getAllTodos(userDetails);
 
         // then
-        assertThat(result).isNotNull();
-        assertThat(result.id()).isEqualTo(1L);
-        assertThat(result.title()).isEqualTo("Test Todo");
-        assertThat(result.description()).isEqualTo("Test description");
-        assertThat(result.completed()).isFalse();
-        assertThat(result.createdBy()).isEqualTo("semih");
+        assertThat(result).containsExactly(dto1, dto2);
 
-        // verify correct method calls
-        verify(todoMapper).toEntity(request, user);
-        verify(todoRepository).save(todoEntity);
-        verify(todoMapper).toDto(savedTodo);
+        // verify
+        Mockito.verify(todoRepository).findTodosByUser_Id(userId);
+        Mockito.verify(todoMapper).toDto(todo1);
+        Mockito.verify(todoMapper).toDto(todo2);
     }
 }
+
