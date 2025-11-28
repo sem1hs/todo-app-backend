@@ -19,4 +19,6 @@ spring:
 # PowerShellde bunu yaz
 #[Convert]::ToBase64String((1..32 | ForEach-Object {Get-Random -Maximum 256}))
 jwt:
-  key: 9W5XgXodMr4OQ5QGm4ReV9FbtVqnM3MCHazU14ols/k=
+  secret: 9W5XgXodMr4OQ5QGm4ReV9FbtVqnM3MCHazU14ols/k=
+  access-token-expiration: 900000 # 1000 * 60 * 15 - 15 Dakika
+  refresh-token-expiration: 604800000 # 1000 * 60 * 60 * 24 * 7 - 1 Hafta

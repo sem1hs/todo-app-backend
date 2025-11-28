@@ -1,10 +1,10 @@
 package com.semihsahinoglu.todo_app.service;
 
+import com.semihsahinoglu.todo_app.entity.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +17,21 @@ import java.util.Map;
 @Service
 public class JwtService {
 
-    @Value("${jwt.key}")
-    private String JWT_KEY;
+    private final JwtProperties jwtProperties;
+
+    public JwtService(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
+    }
 
     public String generateAccessToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        int expiration = 1000 * 60 * 15; // 15 Dakika
+        int expiration = jwtProperties.getAccessTokenExpiration();
         return createToken(claims, username, expiration);
     }
 
     public String generateRefreshToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        int expiration = 1000 * 60 * 60 * 24 * 7; // 7 Gün
+        int expiration = jwtProperties.getRefreshTokenExpiration();
         return createToken(claims, username, expiration);
     }
 
@@ -74,6 +77,7 @@ public class JwtService {
     }
 
     private Key getSignKey() {
+        String JWT_KEY = jwtProperties.getSecret();
         byte[] keyBytes = Decoders.BASE64.decode(JWT_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }

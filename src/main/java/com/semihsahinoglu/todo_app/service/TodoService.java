@@ -35,7 +35,7 @@ public class TodoService {
 
     public List<TodoResponse> getAllTodos(CustomUserDetails userDetails) {
         Long userId = userDetails.getUser().getId();
-        List<Todo> todos = todoRepository.findTodosByUser_Id(userId);
+        List<Todo> todos = todoRepository.findTodosByUser_IdOrderByCreatedDate(userId);
         List<TodoResponse> todoResponses = todos.stream().map(todoMapper::toDto).toList();
         return todoResponses;
     }
